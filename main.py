@@ -4,6 +4,10 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import pytesseract
 from PIL import Image
+import keyboard
+import pygetwindow as gw
+
+win = gw.getActiveWindow()
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
@@ -36,6 +40,24 @@ START_BTN = InlineKeyboardMarkup(
         ]]
     )
 
+@Bot.on_message(filters.command(['resume']) & check_user & filters.private)
+async def edame(client, message):
+    win.activate()
+    keyboard.press_and_release('enter')
+    await message.reply('resumed.')
+
+@Bot.on_message(filters.command(['stop']) & check_user & filters.private)
+async def estop(client, message):
+    win.activate()
+    keyboard.press_and_release('pause')
+    await message.reply('stoped. to resume send /resume')
+
+@Bot.on_message(filters.command(['cancel']) & check_user & filters.private)
+async def kansel(client, message):
+    chat_id = message.from_user.id
+    db.erase(chat_id)
+    await message.reply('canceled.')
+    exit()
 
 @Bot.on_message(filters.command(["start"]))
 async def start(bot, update):
@@ -46,15 +68,6 @@ async def start(bot, update):
         disable_web_page_preview=True,
         reply_markup=reply_markup
     )
-
-@Bot.on_message(filters.command(["cancel"]))
-async def cancel_progress(_, m):
-    try:
-        shutil.rmtree("temp/")
-    except:
-        await m.reply("can't cancel. maybe there wasn't any progress in process.")
-    else:
-        await m.reply("canceled successfully.")
 
 
 #language
@@ -74,7 +87,7 @@ async def main(bot, m):
         pass
     media = m.video or m.document
     await m.download("temp/vid.mp4")
-    await ms.edit("`Now Extracting..`\n\n for cancel progress, send /cancel", parse_mode='md')
+    await ms.edit("`Now Extracting..`\n\n for cancel, send /cancel", parse_mode='md')
     if m.video:
         duration = m.video.duration
     else:
@@ -147,7 +160,7 @@ async def main(bot, m):
                 round(percentage, 2)
             )
             try:
-                await ms.edit(progress + "`For cancel progress, send` /cancel", parse_mode='md')
+                await ms.edit(progress + "`For cancel, send` /cancel\n`For stop, send` /stop", parse_mode='md')
             except:
                 pass
 
