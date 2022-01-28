@@ -1,7 +1,6 @@
 pyrogram
 tgcrypto
 Pillow
-requests
 pytesseract
 keyboard
 pygetwindow
