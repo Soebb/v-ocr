@@ -1,4 +1,3 @@
-import requests
 import os, datetime, subprocess, shutil, json, math, time
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
