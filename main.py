@@ -54,7 +54,7 @@ async def estop(client, message):
 @Bot.on_message(filters.command(['cancel']) & filters.private)
 async def kansel(client, message):
     await message.reply('canceled.')
-    exit()
+    exit(0)
 
 @Bot.on_message(filters.command(["start"]))
 async def start(bot, update):
